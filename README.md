@@ -18,4 +18,4 @@ The provided software offers a user-friendly solution to retrieve a verification
 - Use it by
 <pre><code>$ python .\code\Discord_Rambler_login.py</code></pre>
 
-**"!!!"** Please check config.py
+**"!!!"** Please check constants.py
