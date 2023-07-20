@@ -38,7 +38,7 @@ def link_authorization():
         imap_server.select('Inbox')
 
         # Search for emails with the subject 'Verify Email Address for Discord'
-        status, messages = imap_server.search(None, 'SUBJECT "Verify Discord Login from New Location"')
+        status, messages = imap_server.search(None, "ALL")
 
         # Get the IDs of the emails that match the search criteria
         msg_ids = messages[0].split()
@@ -46,7 +46,7 @@ def link_authorization():
         if msg_ids != []:
             for msg_id in msg_ids:
                 # Fetch the contents of the email with the matching subject
-                status, message = imap_server.fetch(msg_id, '(RFC822)')
+                status, message = imap_server.fetch(msg_ids[-1], '(RFC822)')
                 for response in message:
                     if isinstance(response, tuple):
                         msg = email.message_from_bytes(response[1])
