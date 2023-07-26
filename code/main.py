@@ -43,36 +43,38 @@ def link_authorization():
         # Get the IDs of the emails that match the search criteria
         msg_ids = messages[0].split()
 
-        if msg_ids != []:
-            for msg_id in msg_ids:
-                # Fetch the contents of the email with the matching subject
-                status, message = imap_server.fetch(msg_ids[-1], '(RFC822)')
-                for response in message:
-                    if isinstance(response, tuple):
-                        msg = email.message_from_bytes(response[1])
-                        for msg in msg.get_payload():
-                            body = msg.get_payload()
+        if msg_ids == []:
+            return None
 
-                            decoded_body = quopri.decodestring(body).decode()
+        for msg_id in msg_ids:
+            # Fetch the contents of the email with the matching subject
+            status, message = imap_server.fetch(msg_ids[-1], '(RFC822)')
+            for response in message:
+                if isinstance(response, tuple):
+                    msg = email.message_from_bytes(response[1])
+                    for msg in msg.get_payload():
+                        body = msg.get_payload()
 
-                            # Remove = from the body
-                            decoded_body = decoded_body.replace("=\n", '')
+                        decoded_body = quopri.decodestring(body).decode()
 
-                            soup = BeautifulSoup(decoded_body, 'html.parser')
-                            
-                            verify_link_text = soup.find(text=re.compile(r'Verify Login'))
+                        # Remove = from the body
+                        decoded_body = decoded_body.replace("=\n", '')
 
-                            link = verify_link_text.split('Verify Login: ')[1].split()[0]
-                                                        
-                            print('\n GOT VERIFICATION LINK ✅')
+                        soup = BeautifulSoup(decoded_body, 'html.parser')
+                        
+                        verify_link_text = soup.find(text=re.compile(r'Verify Login'))
 
-                            # Mark the email for deletion
-                            # imap_server.store(msg_id, '+FLAGS', '\\Deleted')
+                        link = verify_link_text.split('Verify Login: ')[1].split()[0]
+                                                    
+                        print('\n GOT VERIFICATION LINK ✅')
 
-                            # imap_server.close()
-                            # imap_server.logout()
+                        # Mark the email for deletion
+                        imap_server.store(msg_id, '+FLAGS', '\\Deleted')
 
-                            return link
+                        imap_server.close()
+                        imap_server.logout()
+
+                        return link
 
     except Exception as link_authorization_mail:
         print("\nError in link authorization -", link_authorization_mail)

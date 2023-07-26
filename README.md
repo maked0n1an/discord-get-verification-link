@@ -16,6 +16,6 @@ The provided software offers a user-friendly solution to retrieve a verification
 - Type into terminal
 <pre><code>$ pip install -r requirements.txt</code></pre>
 - Use it by
-<pre><code>$ python .\code\Discord_Rambler_login.py</code></pre>
+<pre><code>$ python .\code\main.py</code></pre>
 
 **"!!!"** Please check config.py
